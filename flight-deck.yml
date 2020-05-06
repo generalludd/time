@@ -1,0 +1,28 @@
+---
+flightdeck_debug: no
+mysql_root_password: "root"
+mysql_allow_remote_root: yes
+mysql_databases:
+  - name: "ci"
+    encoding: "latin1"
+    collation: "latin1_general_ci"
+mysql_users:
+  - name: "ci"
+    host: "%"
+    password: "ci"
+    priv: "ci.*:ALL"
+mysql_key_buffer_size: "256M"
+mysql_max_allowed_packet: "64M"
+mysql_table_open_cache: "256"
+mysql_query_cache_size: "0"
+flightdeck_web:
+  vhosts:
+    - name: "time.test"
+      aliases:
+        - "docker.test"
+      env:
+        - name: "T7_SITE_ENVIRONMENT"
+          value: "docker"
+  php:
+    upload_max_filesize: "128M"
+    post_max_size: "128M"

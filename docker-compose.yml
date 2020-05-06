@@ -1,0 +1,40 @@
+version: '3'
+services:
+  web:
+    image: ten7/flight-deck-web:develop-drupal7
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    volumes:
+      - ./src:/var/www/html:cached
+      - ./config:/var/www/config:cached
+      - ./db-backups:/var/www/db-backups:cached
+      - ./flight-deck.yml:/config/web/flight-deck-web.yml
+  db:
+    image: ten7/flight-deck-db:10
+    ports:
+      - 3306:3306
+    volumes:
+      - /var/lib/mysql
+      - ./db-backups:/tmp/db-backups:cached
+      - ./flight-deck.yml:/secrets/flight-deck-db.yml
+  memcached:
+    image: memcached:1.5-alpine
+    command: "memcached -m 128"
+  pma:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PHP_UPLOAD_MAX_FILESIZE: 1G
+      PHP_MAX_INPUT_VARS: 1G
+    ports:
+      - "8001:80"
+    env_file:
+      - .env
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8002:8025"
