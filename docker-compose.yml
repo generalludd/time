@@ -19,9 +19,6 @@ services:
       - /var/lib/mysql
       - ./db-backups:/tmp/db-backups:cached
       - ./flight-deck.yml:/secrets/flight-deck-db.yml
-  memcached:
-    image: memcached:1.5-alpine
-    command: "memcached -m 128"
   pma:
     image: phpmyadmin/phpmyadmin
     environment:
